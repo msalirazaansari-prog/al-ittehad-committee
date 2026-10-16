@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al-Ittihad Committee Management | 17 Members • 17 Months • Rs 20,000</title>
+  <meta name="description" content="Online Committee (Kameti) management system for 17 members for 17 months at Rs. 20,000 per month. Total monthly pot Rs. 340,000.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪙</text></svg>">
+</head>
+<body>
+
+  <!-- Confetti Canvas for Celebrations -->
+  <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none;"></canvas>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar no-print">
+    <div class="nav-container">
+      <div class="brand-wrapper">
+        <div class="brand-icon">₨</div>
+        <div class="brand-text">
+          <h1>Al-Ittihad Committee <span class="badge badge-gold">17 Members</span></h1>
+          <div class="brand-tagline">17 Months &bull; Rs. 20,000 / Month &bull; Rs. 340,000 Monthly Pot</div>
+        </div>
+      </div>
+
+      <nav class="nav-pills">
+        <button class="nav-pill-btn active" data-tab="dashboard">
+          <span>📊</span> Dashboard
+        </button>
+        <button class="nav-pill-btn" data-tab="matrix">
+          <span>📋</span> 17×17 Matrix
+        </button>
+        <button class="nav-pill-btn" data-tab="payouts">
+          <span>🎁</span> Payouts & Draw
+        </button>
+        <button class="nav-pill-btn" data-tab="members">
+          <span>👥</span> Members (17)
+        </button>
+        <button class="nav-pill-btn" data-tab="settings">
+          <span>⚙️</span> Settings & Backup
+        </button>
+      </nav>
+
+      <div class="nav-actions">
+        <select id="active-month-selector" class="select-filter" title="Change Active Working Month">
+          <!-- Populated by JS -->
+        </select>
+        <button class="btn-icon" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+          🌓
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main-wrapper">
+
+    <!-- High-Impact Top Banner -->
+    <section class="hero-banner no-print">
+      <div class="banner-left">
+        <div class="banner-badge-icon">🏛️</div>
+        <div>
+          <div class="banner-title">17-Month Rotating Savings & Credit Committee</div>
+          <div class="banner-subtitle">Official Transparent Ledger for Ali, Raza, Ansari, Awais, Hameed, Sadia, Junaid, Ayesha, Rafia, Noman, Rafan, Shazia, Fareeda, Hassan, Najma, Raheela, Rahat</div>
+        </div>
+      </div>
+      <div class="banner-chips">
+        <div class="banner-chip">
+          <span>👥</span> <strong>17</strong> Members
+        </div>
+        <div class="banner-chip">
+          <span>📅</span> <strong>17</strong> Months
+        </div>
+        <div class="banner-chip">
+          <span>💵</span> <strong>Rs. 20,000</strong> / Member
+        </div>
+        <div class="banner-chip" style="border-color: var(--primary);">
+          <span>💰</span> <strong>Rs. 340,000</strong> Monthly Pot
+        </div>
+        <div class="banner-chip" style="border-color: var(--accent-gold);">
+          <span>🏆</span> <strong>Rs. 5,780,000</strong> Grand Pool
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: EXECUTIVE DASHBOARD -->
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="stats-grid">
+        <!-- Stat 1: Total Collected to Date -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-title">Total Collected (To Date)</span>
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--primary);">💰</div>
+          </div>
+          <div class="stat-value" id="stat-grand-total">Rs. 0</div>
+          <div class="stat-subtext">
+            <span id="stat-overall-target">Target: Rs. 5,780,000</span>
+            <span class="badge badge-paid" id="stat-overall-percent" style="margin-left: auto;">0%</span>
+          </div>
+          <div class="stat-progress">
+            <div class="stat-progress-bar" id="stat-overall-progress-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Stat 2: Active Month Collections -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-title">Current Month Progress</span>
+            <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: var(--secondary);">📈</div>
+          </div>
+          <div class="stat-value" id="stat-active-month-collected">Rs. 0</div>
+          <div class="stat-subtext">
+            <span id="stat-active-month-target">Target: Rs. 340,000</span>
+            <span class="badge badge-indigo" id="stat-active-percent" style="margin-left: auto;">0%</span>
+          </div>
+          <div class="stat-progress">
+            <div class="stat-progress-bar" id="stat-active-progress-bar" style="background: var(--secondary); width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Stat 3: Members Paid Status -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-title">Collection Count</span>
+            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">👥</div>
+          </div>
+          <div class="stat-value" id="stat-active-paid-count">0 / 17</div>
+          <div class="stat-subtext" style="color: var(--accent-gold);">
+            <span id="stat-active-pending-count">17 Members Due</span>
+          </div>
+          <div style="margin-top: 14px;">
+            <button class="btn btn-secondary" style="width: 100%; font-size: 0.8rem; padding: 6px 10px;" onclick="switchTab('matrix')">
+              Open 17×17 Ledger Grid →
+            </button>
+          </div>
+        </div>
+
+        <!-- Stat 4: Beneficiary for Current Month -->
+        <div class="stat-card" style="border-color: rgba(99, 102, 241, 0.4);">
+          <div class="stat-card-header">
+            <span class="stat-title">Current Month Pot Winner</span>
+            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-gold);">👑</div>
+          </div>
+          <div class="stat-value" id="stat-active-beneficiary" style="font-size: 1.5rem; color: #a5b4fc;">-</div>
+          <div class="stat-subtext" id="stat-active-ben-status">
+            <span class="badge badge-pending">Ready for Handover</span>
+          </div>
+          <div style="margin-top: 14px; display: flex; gap: 8px;">
+            <button class="btn btn-primary" style="flex: 1; font-size: 0.8rem; padding: 6px 10px;" onclick="switchTab('payouts')">
+              View Payouts →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Cards & Activity Feed -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <!-- Left Quick Actions & Committee Rules -->
+        <div class="matrix-container">
+          <h2 style="font-size: 1.2rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <span>📜</span> Committee Terms & Transparent Rules
+          </h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 14px; border-radius: var(--radius-md);">
+              <div style="color: var(--text-secondary); font-size: 0.78rem;">FIXED CONTRIBUTION</div>
+              <div style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-top: 4px;">Rs. 20,000 / Member</div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">Payable between 1st to 10th of every month.</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 14px; border-radius: var(--radius-md);">
+              <div style="color: var(--text-secondary); font-size: 0.78rem;">POT BENEFIT</div>
+              <div style="font-size: 1.15rem; font-weight: 700; color: #818cf8; margin-top: 4px;">Rs. 340,000 Handover</div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">One lucky member gets 3.4 Lakhs each month.</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 14px; border-radius: var(--radius-md);">
+              <div style="color: var(--text-secondary); font-size: 0.78rem;">TENURE</div>
+              <div style="font-size: 1.15rem; font-weight: 700; color: var(--accent-gold); margin-top: 4px;">17 Continuous Months</div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">Each member receives exactly once.</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="switchTab('matrix')">
+              <span>📋</span> Open Master 17×17 Ledger
+            </button>
+            <button class="btn btn-indigo" onclick="switchTab('payouts')">
+              <span>🎲</span> Lucky Draw Spinner
+            </button>
+            <button class="btn btn-secondary" onclick="exportMatrixCSV()">
+              <span>📥</span> Export Ledger to Excel (CSV)
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Recent Log Feed -->
+        <div class="matrix-container">
+          <h2 style="font-size: 1.15rem; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <span>⚡ Audit & Activity Stream</span>
+            <span class="badge badge-paid">Live</span>
+          </h2>
+          <div id="recent-activity-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: 17x17 MASTER MATRIX LEDGER -->
+    <section id="tab-matrix" class="tab-content">
+      <div class="matrix-container">
+        <div class="matrix-header-bar">
+          <div class="matrix-title-group">
+            <h2><span>📋</span> Master Collection Matrix (17 Members × 17 Months)</h2>
+            <p>Click on any cell to update payment status (Paid, Pending, Partial), record payment methods, print receipts, or send WhatsApp updates.</p>
+          </div>
+
+          <div class="matrix-filters">
+            <input type="text" id="matrix-search" class="input-search" placeholder="🔍 Search member name...">
+            <select id="matrix-filter" class="select-filter">
+              <option value="all">All Members (17)</option>
+              <option value="pending">With Pending Dues</option>
+              <option value="paid">Fully Paid</option>
+            </select>
+            <button class="btn btn-secondary" onclick="exportMatrixCSV()" title="Download as CSV">
+              <span>📊 Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable 17x17 Matrix Table -->
+        <div class="matrix-table-wrapper">
+          <table class="matrix-table" id="matrix-table">
+            <!-- Dynamically generated with pinned first and last columns -->
+          </table>
+        </div>
+
+        <!-- Legend -->
+        <div class="matrix-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background: var(--status-paid);"></span>
+            <span><strong>Paid:</strong> Rs. 20,000 received</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background: var(--status-partial);"></span>
+            <span><strong>Partial:</strong> Part payment received</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background: var(--status-pending);"></span>
+            <span><strong>Pending:</strong> Installment due</span>
+          </div>
+          <div style="margin-left: auto; color: var(--text-muted);">
+            💡 Tip: First column & total column are sticky; scroll horizontally to inspect all 17 months!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: PAYOUTS & LUCKY DRAW -->
+    <section id="tab-payouts" class="tab-content">
+      <div class="payout-section-grid">
+        <!-- Left: 17 Month Payout Schedule -->
+        <div class="payout-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h2 style="font-size: 1.3rem;"><span>🎁</span> Monthly Payout Schedule (17 Months)</h2>
+              <p style="color: var(--text-secondary); font-size: 0.84rem;">Every month one lucky member receives the entire pool of Rs. 340,000.</p>
+            </div>
+            <div class="badge badge-gold" style="font-size: 0.85rem; padding: 6px 12px;">
+              Total Pot: Rs. 340,000 / Month
+            </div>
+          </div>
+
+          <div class="payout-grid" id="payout-cards-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Right: Lucky Draw Simulator Widget -->
+        <div>
+          <div class="draw-widget">
+            <div class="draw-widget-icon">🎲</div>
+            <h3>Committee Lucky Draw</h3>
+            <p>Run a transparent, randomized lucky draw with audio synthesizer & confetti for fair month assignments!</p>
+
+            <div id="draw-winner-display" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+              <div style="color: var(--text-muted); font-size: 0.9rem;">Click button below to spin the wheel</div>
+            </div>
+
+            <button id="btn-spin-draw" class="btn btn-gold" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="conductLuckyDraw()">
+              🎲 Conduct Lucky Draw
+            </button>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
+              Randomly rotates through all 17 eligible members.
+            </div>
+          </div>
+
+          <!-- Payout Rules & Terms Box -->
+          <div style="margin-top: 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px;">
+            <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: var(--primary);">Payout Disbursement Terms</h4>
+            <ul style="font-size: 0.8rem; color: var(--text-secondary); padding-left: 18px; line-height: 1.6;">
+              <li>Pot amount of Rs. 340,000 is handed over only after 100% of 17 installments are collected.</li>
+              <li>Official Voucher is issued and signed by both the recipient and committee admin.</li>
+              <li>A member who has received the pot must continue paying their Rs. 20,000 for the remainder of the 17 months.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: MEMBERS DIRECTORY (17) -->
+    <section id="tab-members" class="tab-content">
+      <div class="matrix-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 1.3rem;"><span>👥</span> All 17 Committee Members</h2>
+            <p style="color: var(--text-secondary); font-size: 0.84rem;">View individual contributions, remaining dues, payout month, statements, and send WhatsApp reminders.</p>
+          </div>
+          <div class="badge badge-indigo" style="font-size: 0.85rem; padding: 6px 14px;">
+            17 Verified Participants
+          </div>
+        </div>
+
+        <div class="members-grid" id="members-directory-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: SETTINGS & BACKUP -->
+    <section id="tab-settings" class="tab-content">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+        
+        <!-- Settings Form -->
+        <div class="matrix-container">
+          <h2 style="font-size: 1.2rem; margin-bottom: 16px;">⚙️ Committee Configuration</h2>
+          <div class="form-group">
+            <label class="form-label">Committee Name</label>
+            <input type="text" class="form-input" id="setting-name" value="Al-Ittihad Committee (17 Members)" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly Installment (Fixed)</label>
+            <input type="text" class="form-input" value="Rs. 20,000 per member" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Active Working Month (Dashboard View)</label>
+            <select class="form-select" id="setting-active-month">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Committee Start Date</label>
+            <input type="date" class="form-input" id="setting-start-date">
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">
+            💾 Save Settings
+          </button>
+        </div>
+
+        <!-- Data Backup & Restore -->
+        <div class="matrix-container">
+          <h2 style="font-size: 1.2rem; margin-bottom: 16px;">💾 Backup & Data Portability</h2>
+          <p style="color: var(--text-secondary); font-size: 0.84rem; margin-bottom: 18px;">
+            All data is saved locally in your browser storage. You can download a complete JSON backup or export to Excel CSV anytime.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button class="btn btn-secondary" onclick="exportData()" style="justify-content: flex-start;">
+              <span>📥 Download Backup (JSON)</span>
+            </button>
+            <button class="btn btn-secondary" onclick="exportMatrixCSV()" style="justify-content: flex-start;">
+              <span>📊 Export Full Matrix to Excel (CSV)</span>
+            </button>
+            
+            <div style="margin-top: 10px;">
+              <label class="form-label">Restore from JSON Backup</label>
+              <input type="file" accept=".json" class="form-input" onchange="importData(event)">
+            </div>
+          </div>
+        </div>
+
+        <!-- Factory Reset Options -->
+        <div class="matrix-container" style="border-color: rgba(244, 63, 94, 0.3);">
+          <h2 style="font-size: 1.2rem; margin-bottom: 16px; color: var(--status-danger);">⚠️ Reset Controls</h2>
+          <p style="color: var(--text-secondary); font-size: 0.84rem; margin-bottom: 18px;">
+            Reset the system to demonstration sample data or start fresh with a blank 17-month ledger.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button class="btn btn-secondary" onclick="resetToSample()">
+              <span>🔄 Reset to Realistic Sample Data</span>
+            </button>
+            <button class="btn btn-secondary" style="border-color: var(--status-danger); color: var(--status-danger);" onclick="resetToBlank()">
+              <span>🗑️ Wipe All Records (Start Brand New)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- MODALS -->
+  <!-- ========================================================= -->
+
+  <!-- 1. Payment Modal -->
+  <div id="payment-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.15rem;">Record Installment Payment</h3>
+          <div style="font-size: 0.82rem; color: var(--text-secondary);">
+            <strong id="modal-pay-member-name" style="color: var(--primary);">-</strong> &bull; <span id="modal-pay-month-name">-</span>
+          </div>
+        </div>
+        <button class="btn-icon" onclick="closePaymentModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Payment Status</label>
+          <select id="pay-status" class="form-select" onchange="handleStatusChange()">
+            <option value="paid">Paid (Full Rs. 20,000) ✅</option>
+            <option value="partial">Partial Payment 🟡</option>
+            <option value="pending">Pending (Not Paid) ⏳</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Amount Paid (PKR)</label>
+          <input type="number" id="pay-amount" class="form-input" min="0" max="20000" step="500">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Date</label>
+          <input type="date" id="pay-date" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select id="pay-method" class="form-select">
+            <option value="Cash">Cash (In-Person)</option>
+            <option value="Bank Transfer">Bank Transfer (Raast / IBFT)</option>
+            <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa</option>
+            <option value="SadaPay / NayaPay">SadaPay / NayaPay</option>
+            <option value="Cheque / Pay Order">Cheque / Pay Order</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notes / Transaction Reference</label>
+          <textarea id="pay-notes" class="form-textarea" rows="2" placeholder="e.g. Raast Ref # 938217 or received at committee meeting"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="openReceiptFromModal()">
+          🧾 Generate Receipt
+        </button>
+        <button class="btn btn-secondary" onclick="closePaymentModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="savePayment()">
+          💾 Save Payment
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Official Printable Receipt Modal -->
+  <div id="receipt-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 620px;">
+      <div class="modal-header no-print">
+        <h3 style="font-size: 1.15rem;">Official Payment Receipt</h3>
+        <button class="btn-icon" onclick="closeReceiptModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Printable Paper Voucher -->
+        <div class="receipt-paper">
+          <div class="receipt-header-row">
+            <div class="receipt-logo-title">
+              <h2>Al-Ittihad Committee</h2>
+              <div style="font-size: 0.85rem; color: #475569;">17 Members Savings Association &bull; Month Installment</div>
+            </div>
+            <div class="receipt-no-box">
+              <div style="font-weight: 700; color: #0f172a;" id="receipt-number">REC-001</div>
+              <div id="receipt-date">Date: 2026-10-16</div>
+            </div>
+          </div>
+
+          <div class="receipt-meta-grid">
+            <div>
+              <div style="color: #64748b; font-size: 0.75rem;">RECEIVED FROM MEMBER:</div>
+              <div style="font-size: 1.1rem; font-weight: 700;" id="receipt-member-name">Ali</div>
+              <div style="font-size: 0.78rem; color: #64748b;" id="receipt-member-phone">Phone: 0300-XXXXXXX</div>
+            </div>
+            <div>
+              <div style="color: #64748b; font-size: 0.75rem;">PAYMENT DETAILS:</div>
+              <div style="font-weight: 600;" id="receipt-month-label">Month 1 of 17</div>
+              <div style="font-size: 0.8rem; color: #64748b;">Method: <span id="receipt-method">Cash</span></div>
+            </div>
+          </div>
+
+          <table class="receipt-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Status</th>
+                <th style="text-align: right;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly Committee Contribution (1 of 17)</td>
+                <td><span id="receipt-status-text" style="font-weight: 600; color: #059669;">PAID</span></td>
+                <td style="text-align: right; font-weight: 700;" id="receipt-amount-display">Rs. 20,000</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="receipt-amount-banner">
+            <span>Total Amount Received:</span>
+            <span id="receipt-amount-total">Rs. 20,000</span>
+          </div>
+
+          <div style="font-size: 0.8rem; color: #475569; font-style: italic; margin-bottom: 12px;">
+            Note: <span id="receipt-notes">Monthly installment verified and recorded in master ledger.</span>
+          </div>
+
+          <div class="receipt-signatures">
+            <div class="signature-line">Member's Signature</div>
+            <div class="signature-line">Authorized Administrator</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer no-print">
+        <button class="btn btn-secondary" onclick="shareReceiptWhatsApp()">
+          💬 Share WhatsApp
+        </button>
+        <button class="btn btn-primary" onclick="printReceipt()">
+          🖨️ Print Receipt
+        </button>
+        <button class="btn btn-secondary" onclick="closeReceiptModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Payout Handover Voucher Modal -->
+  <div id="payout-voucher-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 620px;">
+      <div class="modal-header no-print">
+        <h3 style="font-size: 1.15rem;">Pot Disbursement Handover Voucher</h3>
+        <button class="btn-icon" onclick="closePayoutVoucher()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="receipt-paper" style="border-color: #6366f1;">
+          <div class="receipt-header-row">
+            <div class="receipt-logo-title">
+              <h2 style="color: #4338ca;">Pot Disbursement Voucher</h2>
+              <div style="font-size: 0.85rem; color: #475569;">Al-Ittihad Committee &bull; Rs. 340,000 Handover</div>
+            </div>
+            <div class="receipt-no-box">
+              <div style="font-weight: 700; color: #0f172a;" id="voucher-receipt-no">PAY-M01</div>
+              <div id="voucher-date">2026-10-16</div>
+            </div>
+          </div>
+
+          <div class="receipt-meta-grid">
+            <div>
+              <div style="color: #64748b; font-size: 0.75rem;">POT RECIPIENT (BENEFICIARY):</div>
+              <div style="font-size: 1.2rem; font-weight: 800; color: #4338ca;" id="voucher-member-name">Ali</div>
+              <div style="font-size: 0.8rem; color: #64748b;">All 17 members' pool for this month</div>
+            </div>
+            <div>
+              <div style="color: #64748b; font-size: 0.75rem;">COMMITTEE PERIOD:</div>
+              <div style="font-weight: 600;" id="voucher-month-info">Month 1 of 17</div>
+              <div style="font-size: 0.8rem; color: #059669; font-weight: 700;" id="voucher-status">DISBURSED</div>
+            </div>
+          </div>
+
+          <div class="receipt-amount-banner" style="background: #eef2ff; border-color: #6366f1; color: #3730a3;">
+            <span>Total Pot Handover Amount:</span>
+            <span id="voucher-pot-amount">Rs. 340,000</span>
+          </div>
+
+          <div style="font-size: 0.82rem; color: #475569; line-height: 1.5; margin-bottom: 24px;">
+            I hereby acknowledge the receipt of <strong>Rs. 340,000 (Three Lakh Forty Thousand Rupees)</strong> from the Al-Ittihad Committee for this month. I affirm that I will continue to punctually deposit my monthly installment of Rs. 20,000 for the remainder of the 17-month duration.
+          </div>
+
+          <div class="receipt-signatures">
+            <div class="signature-line">Beneficiary Signature</div>
+            <div class="signature-line">Committee Treasurer</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer no-print">
+        <button class="btn btn-primary" onclick="printReceipt()">
+          🖨️ Print Voucher
+        </button>
+        <button class="btn btn-secondary" onclick="closePayoutVoucher()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Member Statement Modal -->
+  <div id="statement-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.15rem;">Member Statement & Statement Ledger</h3>
+          <div style="font-size: 0.82rem; color: var(--text-secondary);">
+            Member: <strong id="statement-member-name" style="color: var(--primary);">-</strong> &bull; Payout Month: <span id="statement-member-payout">-</span>
+          </div>
+        </div>
+        <button class="btn-icon" onclick="closeStatementModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px;">
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 12px; border-radius: var(--radius-md);">
+            <div style="font-size: 0.74rem; color: var(--text-secondary);">TOTAL CONTRIBUTED</div>
+            <div id="statement-total-paid" style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">Rs. 0</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 12px; border-radius: var(--radius-md);">
+            <div style="font-size: 0.74rem; color: var(--text-secondary);">REMAINING COMMITMENT</div>
+            <div id="statement-balance-due" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-gold);">Rs. 0</div>
+          </div>
+        </div>
+
+        <div style="max-height: 340px; overflow-y: auto; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: left;">
+            <thead style="background: rgba(0,0,0,0.4); position: sticky; top: 0;">
+              <tr>
+                <th style="padding: 8px 12px; border-bottom: 1px solid var(--border-subtle);">Month</th>
+                <th style="padding: 8px 12px; border-bottom: 1px solid var(--border-subtle);">Period</th>
+                <th style="padding: 8px 12px; border-bottom: 1px solid var(--border-subtle);">Amount</th>
+                <th style="padding: 8px 12px; border-bottom: 1px solid var(--border-subtle);">Status</th>
+                <th style="padding: 8px 12px; border-bottom: 1px solid var(--border-subtle);">Date</th>
+                <th style="padding: 8px 12px; border-bottom: 1px solid var(--border-subtle);">Method</th>
+              </tr>
+            </thead>
+            <tbody id="statement-table-body">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeStatementModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
